@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'task_list_screen.dart';
 import 'add_task_screen.dart';
+import 'task_data.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => TaskData(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -12,11 +19,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'App de Afazeres',
       theme: ThemeData(
-        primaryColor:
-            Colors.blue, // Definindo a cor azul para a barra de navegação
+        primaryColor: Colors.blue,
         appBarTheme: AppBarTheme(
-          backgroundColor:
-              Colors.blue, // Definindo a cor azul para a barra de navegação
+          backgroundColor: Colors.blue,
         ),
       ),
       initialRoute: '/',
