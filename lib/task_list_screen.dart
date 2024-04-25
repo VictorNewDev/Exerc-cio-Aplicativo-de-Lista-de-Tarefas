@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'task_data.dart';
 
 class TaskListScreen extends StatefulWidget {
   @override
@@ -6,33 +8,33 @@ class TaskListScreen extends StatefulWidget {
 }
 
 class _TaskListScreenState extends State<TaskListScreen> {
-  List<String> tasks = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Lista de Tarefas'),
       ),
-      body: ListView.builder(
-        itemCount: tasks.length,
-        itemBuilder: (context, index) {
-          return Dismissible(
-            key: Key(tasks[index]),
-            onDismissed: (direction) {
-              setState(() {
-                tasks.removeAt(index);
-              });
+      body: Consumer<TaskData>(
+        builder: (context, taskData, child) {
+          return ListView.builder(
+            itemCount: taskData.tasks.length,
+            itemBuilder: (context, index) {
+              return Dismissible(
+                key: Key(taskData.tasks[index]),
+                onDismissed: (direction) {
+                  taskData.removeTask(index);
+                },
+                background: Container(
+                  color: Colors.red,
+                  child: Icon(Icons.delete, color: Colors.white),
+                  alignment: Alignment.centerRight,
+                  padding: EdgeInsets.only(right: 20.0),
+                ),
+                child: ListTile(
+                  title: Text(taskData.tasks[index]),
+                ),
+              );
             },
-            background: Container(
-              color: Colors.red,
-              child: Icon(Icons.delete, color: Color(0xff030303)),
-              alignment: Alignment.centerRight,
-              padding: EdgeInsets.only(right: 20.0),
-            ),
-            child: ListTile(
-              title: Text(tasks[index]),
-            ),
           );
         },
       ),
@@ -40,9 +42,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
         onPressed: () {
           Navigator.pushNamed(context, '/addTask').then((value) {
             if (value != null && value.toString().isNotEmpty) {
-              setState(() {
-                tasks.add(value.toString());
-              });
+              Provider.of<TaskData>(context, listen: false)
+                  .addTask(value.toString());
             }
           });
         },

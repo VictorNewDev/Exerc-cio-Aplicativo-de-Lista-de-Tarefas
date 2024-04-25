@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'task_data.dart';
 
 class AddTaskScreen extends StatelessWidget {
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _descriptionController =
+      TextEditingController(); // Controlador para a descrição
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +33,15 @@ class AddTaskScreen extends StatelessWidget {
               onPressed: () {
                 String title = _titleController.text;
                 String description = _descriptionController.text;
-                Navigator.pop(context, '$title\n$description');
+                if (title.isNotEmpty) {
+                  Provider.of<TaskData>(context, listen: false)
+                      .addTask(title + '\n' + description);
+                  Navigator.pop(context);
+                }
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.blue, // Cor de fundo azul
-                onPrimary: Colors.white, // Cor do texto branco
+                primary: Colors.blue,
+                onPrimary: Colors.white,
               ),
               child: Text('Adicionar Tarefa'),
             ),
